@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Form</title>
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.8em;
+        }
+        .error-field {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+<h1>User Form</h1>
+<form th:action="@{/users/save}" method="post" th:object="${user}">
+    <input type="hidden" th:field="*{id}">
+
+    <div>
+        <label>Name:</label>
+        <input type="text" th:field="*{firstName}"
+               th:class="${#fields.hasErrors('firstName')} ? 'error-field' : ''">
+        <span th:if="${#fields.hasErrors('firstName')}"
+              th:errors="*{firstName}"
+              class="error-message"></span>
+    </div>
+
+    <div>
+        <label>Last Name:</label>
+        <input type="text" th:field="*{lastName}"
+               th:class="${#fields.hasErrors('lastName')} ? 'error-field' : ''">
+        <span th:if="${#fields.hasErrors('lastName')}"
+              th:errors="*{lastName}"
+              class="error-message"></span>
+    </div>
+
+    <div>
+        <label>Email:</label>
+        <input type="email" th:field="*{email}"
+               th:class="${#fields.hasErrors('email')} ? 'error-field' : ''">
+        <span th:if="${#fields.hasErrors('email')}"
+              th:errors="*{email}"
+              class="error-message"></span>
+    </div>
+
+    <button type="submit">Save</button>
+</form>
+<a th:href="@{/users}">Back to list</a>
+</body>
+</html>
