@@ -34,13 +34,13 @@ public class UserServiceImp implements UserService {
     @Override
     public void add(User user) {
         Role role = roleRepository.findByName("ROLE_USER");
-
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new IllegalArgumentException("Username already exists");
+        }
         if (user.getRoles() == null) {
             user.setRoles(new HashSet<>()); // Инициализируем набор ролей, если он null
         }
-
         user.getRoles().add(role); // Добавляем роль
-
         user.setPassword(user.getPassword()); // Хешируем пароль перед сохранением
         userRepository.save(user);
     }
@@ -63,6 +63,8 @@ public class UserServiceImp implements UserService {
             u.setUsername(user.getUsername());
             u.setRoles(user.getRoles());
             userRepository.save(u);
+        } else {
+            userRepository.save(user);
         }
     }
 

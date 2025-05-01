@@ -33,17 +33,17 @@ public class UserController {
       return "users/index";
   }
 
-  @GetMapping("/add")
+  @GetMapping("/new")
   public String showAddForm(Model model) {
     model.addAttribute("user", new User());
-    return "users/add";
+    return "new";
   }
 
     @PostMapping
     public String saveUser(@Valid @ModelAttribute("user") User user,
                            BindingResult result) {
         if (result.hasErrors()) {
-            return "users/add";
+            return "new";
         }
         userService.add(user);
         return "redirect:/users";
@@ -52,14 +52,14 @@ public class UserController {
   @GetMapping("/edit")
   public String editForm(@RequestParam Long id, Model model) {
     model.addAttribute("user", userService.getUserById(id));
-    return "users/edit";
+    return "edit";
   }
 
     @PostMapping("/update")
     public String updateUser(@Valid @ModelAttribute("user") User user,
                              BindingResult result) {
         if (result.hasErrors()) {
-            return "users/edit";
+            return "edit";
         }
         userService.update(user.getId(), user);
         return "redirect:/users";

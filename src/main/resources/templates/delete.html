@@ -24,7 +24,7 @@
             <p>Вы действительно хотите удалить пользователя:</p>
             <p><strong th:text="${user.username}"></strong> (<span th:text="${user.firstName + ' ' + user.lastName}"></span>)</p>
 
-            <form th:action="@{/admin/delete/{id}(id=${user.id})}" method="post">
+            <form th:action="@{/admin/delete(id=${user.id})}" method="post">
                 <button type="submit" class="btn btn-danger">Удалить</button>
                 <a th:href="@{/admin}" class="btn btn-secondary">Отмена</a>
             </form>

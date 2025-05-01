@@ -21,6 +21,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -49,6 +50,10 @@ public class User implements UserDetails {
   @Email
   private String email;
 
+  @Column(name = "age")
+  @NotNull(message = "Недопустимаый возраст")
+  private int age;
+
   @NotBlank(message = "Пароль не может быть пустым")
   @Column(name = "password")
   private String password;
@@ -57,8 +62,7 @@ public class User implements UserDetails {
   @Column(unique = true)
   private String username;
 
-  @ManyToMany(fetch = FetchType.LAZY)
-  @Fetch(FetchMode.JOIN)
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "user_roles",
           joinColumns = @JoinColumn(name = "user_id"),
           inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -66,10 +70,11 @@ public class User implements UserDetails {
 
   public User() {}
 
-  public User(String firstName, String lastName, String email) {
+  public User(String firstName, String lastName, String email, int age) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
+    this.age = age;
   }
 
   public Long getId() {
@@ -102,6 +107,14 @@ public class User implements UserDetails {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public int getAge() {
+    return age;
+  }
+
+  public void setAge(int age) {
+    this.age = age;
   }
 
   @Override

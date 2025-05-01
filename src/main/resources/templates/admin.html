@@ -42,8 +42,8 @@
                 <span th:each="role : ${user.roles}" th:text="${role.name + ' '}"></span>
             </td>
             <td>
-                <a th:href="@{/admin/edit/{id}(id=${user.id})}" class="btn btn-sm btn-primary">Редактировать</a>
-                <a th:href="@{/admin/delete/{id}(id=${user.id})}" class="btn btn-sm btn-danger">Удалить</a>
+                <a th:href="@{/admin/edit(id=${user.id})}" class="btn btn-sm btn-primary">Редактировать</a>
+                <a th:href="@{/admin/delete(id=${user.id})}" class="btn btn-sm btn-danger">Удалить</a>
             </td>
         </tr>
         </tbody>

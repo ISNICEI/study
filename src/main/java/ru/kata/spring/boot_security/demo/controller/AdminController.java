@@ -3,6 +3,7 @@ package ru.kata.spring.boot_security.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.kata.spring.boot_security.demo.entities.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/admin")
@@ -29,20 +32,20 @@ public class AdminController {
         model.addAttribute("users",userService.listUsers());
         return "admin";
     }
-    @GetMapping("/add")
+    @GetMapping("/new")
     public String addUserForm(ModelMap model) {
         model.addAttribute("user", new User());
         model.addAttribute("allRoles", roleService.listRoles());
-        return "add";
+        return "new";
     }
-    @PostMapping("/add")
+    @PostMapping("/new")
     public String addUser(@ModelAttribute("user") User user) {
         userService.add(user);
         return "redirect:/admin";
     }
 
     @GetMapping("/edit")
-    public String editUserForm(@RequestParam("id") long id, ModelMap model) {
+    public String updateUserForm(@RequestParam("id") long id, ModelMap model) {
         User user = userService.getUserById(id);
         model.addAttribute("user", user);
         model.addAttribute("allRoles", roleService.listRoles());
@@ -50,8 +53,18 @@ public class AdminController {
     }
 
     @PostMapping("/edit")
-    public String editUser(@RequestParam("id") long id, @ModelAttribute("user") User user) {
-        userService.update(id, user);
+    public String updateUser(@RequestParam("id") long id, @ModelAttribute("user") @Valid User user,
+                             BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "edit";
+        }
+        User existingUser = userService.getUserById(id);
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            user.setPassword(existingUser.getPassword());
+        } else {
+            user.setPassword(user.getPassword());
+        }
+        userService.update(user.getId(), user);
         return "redirect:/admin";
     }
 

@@ -17,7 +17,7 @@
 
 <div class="container mt-4">
     <h2>Редактировать пользователя</h2>
-    <form th:action="@{/admin/edit/{id}(id=${user.id})}" th:object="${user}" method="post">
+    <form th:action="@{/admin/edit(id=${user.id})}" th:object="${user}" method="post">
         <input type="hidden" th:field="*{id}">
         <div class="mb-3">
             <label class="form-label">Логин:</label>
