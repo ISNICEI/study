@@ -66,15 +66,33 @@ public class User implements UserDetails {
   @JoinTable(name = "user_roles",
           joinColumns = @JoinColumn(name = "user_id"),
           inverseJoinColumns = @JoinColumn(name = "role_id"))
-  private Set<Role> roles = new HashSet<>(); // Инициализация изменяемого набора
+  private Set<Role> roles;
+
+
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return this.getRoles().stream()
+            .map(role -> {
+              String roleName = role.getName();
+              if (!roleName.startsWith("ROLE_")) {
+                roleName = "ROLE_" + roleName;
+              }
+              return new SimpleGrantedAuthority(roleName);
+            })
+            .collect(Collectors.toList());
+  }
 
   public User() {}
 
-  public User(String firstName, String lastName, String email, int age) {
+  public User(String firstName, String lastName, String email, int age, String password, String username, Set<Role> roles) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.age = age;
+    this.password = password;
+    this.username = username;
+    this.roles = roles;
   }
 
   public Long getId() {
@@ -124,22 +142,12 @@ public class User implements UserDetails {
             ", firstName='" + firstName + '\'' +
             ", lastName='" + lastName + '\'' +
             ", email='" + email + '\'' +
+            ", age=" + age +
+            ", password='" + password + '\'' +
+            ", username='" + username + '\'' +
+            ", roles=" + roles +
             '}';
   }
-
-  @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return this.getRoles().stream()
-            .map(role -> {
-              String roleName = role.getName();
-              if (!roleName.startsWith("ROLE_")) {
-                roleName = "ROLE_" + roleName;
-              }
-              return new SimpleGrantedAuthority(roleName);
-            })
-            .collect(Collectors.toList());
-  }
-
 
   public Set<Role> getRoles() {
     return roles;

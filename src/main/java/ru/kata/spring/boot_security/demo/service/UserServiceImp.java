@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.service;
 
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,22 +52,29 @@ public class UserServiceImp implements UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-
     @Override
+    @Transactional
     public void update(Long id, User user) {
+
+
         User u = userRepository.findById(id).orElse(null);
         if (u != null) {
             u.setFirstName(user.getFirstName());
             u.setLastName(user.getLastName());
             u.setEmail(user.getEmail());
-            u.setPassword(user.getPassword());
             u.setUsername(user.getUsername());
+
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                u.setPassword(user.getPassword());
+            }
             u.setRoles(user.getRoles());
+
             userRepository.save(u);
         } else {
             userRepository.save(user);
         }
     }
+
 
     @Override
     public void delete(Long id) {

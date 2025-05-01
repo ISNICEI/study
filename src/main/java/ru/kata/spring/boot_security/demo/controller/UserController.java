@@ -3,71 +3,34 @@ package ru.kata.spring.boot_security.demo.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
+
 import ru.kata.spring.boot_security.demo.entities.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import javax.validation.Valid;
+
+import java.security.Principal;
 
 @Controller
-@RequestMapping("/users")
 public class UserController {
 
-  private final UserService userService;
+    private final UserService userService;
 
-  @Autowired
-  public UserController(UserService userService) {
-    this.userService = userService;
-  }
-
-  @GetMapping
-  public String listUsers(Model model) {
-      model.addAttribute("users", userService.listUsers());
-      return "users/index";
-  }
-
-  @GetMapping("/new")
-  public String showAddForm(Model model) {
-    model.addAttribute("user", new User());
-    return "new";
-  }
-
-    @PostMapping
-    public String saveUser(@Valid @ModelAttribute("user") User user,
-                           BindingResult result) {
-        if (result.hasErrors()) {
-            return "new";
-        }
-        userService.add(user);
-        return "redirect:/users";
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-  @GetMapping("/edit")
-  public String editForm(@RequestParam Long id, Model model) {
-    model.addAttribute("user", userService.getUserById(id));
-    return "edit";
-  }
-
-    @PostMapping("/update")
-    public String updateUser(@Valid @ModelAttribute("user") User user,
-                             BindingResult result) {
-        if (result.hasErrors()) {
-            return "edit";
-        }
-        userService.update(user.getId(), user);
-        return "redirect:/users";
+    @GetMapping("/profile")
+    public String getUserProfile(@AuthenticationPrincipal User user, Model model) {
+        // Получаем пользователя из базы данных по имени пользователя
+        User dbUser = userService.findByUsername(user.getUsername());
+        model.addAttribute("user", dbUser);
+        return "user"; // Возвращаем имя представления (Thymeleaf шаблон)
     }
-
-  @GetMapping("/delete")
-  public String deleteUser(@RequestParam Long id) {
-    userService.delete(id);
-    return "redirect:/users";
-  }
 }
