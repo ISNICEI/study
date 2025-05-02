@@ -17,7 +17,7 @@
 
 <div class="container mt-4">
     <h2>Редактировать пользователя</h2>
-    <form th:action="@{/admin/edit(id=${user.id})}" th:object="${user}" method="post">
+    <form th:action="@{/admin/update(id=${user.id})}" th:object="${user}" method="post">
         <input type="hidden" th:field="*{id}">
         <div class="mb-3">
             <label class="form-label">Логин:</label>
@@ -25,8 +25,20 @@
         </div>
         <div class="mb-3">
             <label class="form-label">Пароль (оставьте пустым, чтобы не менять):</label>
-            <input type="password" class="form-control" th:field="*{password}">
+            <input type="text" id="passwordField" class="form-control" th:field="*{password}">
+            <input type="checkbox" onclick="togglePasswordVisibility()"> Показать пароль
         </div>
+
+        <script>
+            function togglePasswordVisibility() {
+                var passwordField = document.getElementById("passwordField");
+                if (passwordField.type === "password") {
+                    passwordField.type = "text";
+                } else {
+                    passwordField.type = "password";
+                }
+            }
+        </script>
         <div class="mb-3">
             <label class="form-label">Имя:</label>
             <input type="text" class="form-control" th:field="*{firstName}" required>
@@ -54,6 +66,9 @@
         </div>
         <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
+
+
+
 </div>
 </body>
 </html>

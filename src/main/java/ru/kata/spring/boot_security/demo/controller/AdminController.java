@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.kata.spring.boot_security.demo.entities.Role;
 import ru.kata.spring.boot_security.demo.entities.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -44,27 +46,26 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/edit")
+    @GetMapping("/update")
     public String updateUserForm(@RequestParam("id") long id, ModelMap model) {
         User user = userService.getUserById(id);
         model.addAttribute("user", user);
         model.addAttribute("allRoles", roleService.listRoles());
-        return "edit";
+        return "update";
     }
 
-    @PostMapping("/edit")
+    @PostMapping("/update")
     public String updateUser(@RequestParam("id") long id, @ModelAttribute("user") @Valid User user,
-                             BindingResult bindingResult) {
+                             BindingResult bindingResult, ModelMap model) {
         if (bindingResult.hasErrors()) {
-            return "edit";
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "update";
         }
         User existingUser = userService.getUserById(id);
         if (user.getPassword() == null || user.getPassword().isEmpty()) {
             user.setPassword(existingUser.getPassword());
-        } else {
-            user.setPassword(user.getPassword());
         }
-        userService.update(user.getId(), user);
+        userService.update(id, user);
         return "redirect:/admin";
     }
 
