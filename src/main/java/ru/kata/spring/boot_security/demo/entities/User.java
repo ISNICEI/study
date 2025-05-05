@@ -1,16 +1,13 @@
 package ru.kata.spring.boot_security.demo.entities;
 
 
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,10 +19,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -62,7 +57,7 @@ public class User implements UserDetails {
   @Column(unique = true)
   private String username;
 
-  @ManyToMany(fetch = FetchType.EAGER)
+  @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(name = "user_roles",
           joinColumns = @JoinColumn(name = "user_id"),
           inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -71,6 +66,7 @@ public class User implements UserDetails {
 
 
   @Override
+  @Transactional
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return this.getRoles().stream()
             .map(role -> {
@@ -193,5 +189,29 @@ public class User implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+
+    User user = (User) o;
+    return age == user.age && Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName)
+            && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email)
+            && Objects.equals(password, user.password) && Objects.equals(username, user.username)
+            && Objects.equals(roles, user.roles);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = Objects.hashCode(id);
+    result = 31 * result + Objects.hashCode(firstName);
+    result = 31 * result + Objects.hashCode(lastName);
+    result = 31 * result + Objects.hashCode(email);
+    result = 31 * result + age;
+    result = 31 * result + Objects.hashCode(password);
+    result = 31 * result + Objects.hashCode(username);
+    result = 31 * result + Objects.hashCode(roles);
+    return result;
   }
 }

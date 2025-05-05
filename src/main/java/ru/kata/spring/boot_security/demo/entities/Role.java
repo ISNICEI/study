@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.entities;
 
-import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Column;
@@ -11,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 

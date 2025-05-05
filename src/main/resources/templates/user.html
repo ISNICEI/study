@@ -51,14 +51,6 @@
           <p class="form-control-plaintext" th:text="${user.age}"></p>
         </div>
       </div>
-      <div class="row mb-3">
-        <label class="col-sm-2 col-form-label">Роли:</label>
-        <div class="col-sm-10">
-          <p class="form-control-plaintext">
-            <span th:each="role : ${user.roles}" th:text="${role.name + ' '}"></span>
-          </p>
-        </div>
-      </div>
     </div>
   </div>
 </div>

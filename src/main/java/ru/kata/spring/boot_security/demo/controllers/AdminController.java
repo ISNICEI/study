@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.controller;
+package ru.kata.spring.boot_security.demo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,13 +9,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.kata.spring.boot_security.demo.entities.Role;
 import ru.kata.spring.boot_security.demo.entities.User;
-import ru.kata.spring.boot_security.demo.service.RoleService;
-import ru.kata.spring.boot_security.demo.service.UserService;
+import ru.kata.spring.boot_security.demo.services.RoleService;
+import ru.kata.spring.boot_security.demo.services.UserService;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -31,15 +29,18 @@ public class AdminController {
 
     @GetMapping
     public String showUsersList(ModelMap model) {
-        model.addAttribute("users",userService.listUsers());
+        model.addAttribute("users", userService.listUsers());
+        model.addAttribute("roles", roleService.listRoles());
         return "admin";
     }
+
     @GetMapping("/new")
     public String addUserForm(ModelMap model) {
         model.addAttribute("user", new User());
         model.addAttribute("allRoles", roleService.listRoles());
         return "new";
     }
+
     @PostMapping("/new")
     public String addUser(@ModelAttribute("user") User user) {
         userService.add(user);
@@ -69,8 +70,15 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-
     @GetMapping("/delete")
+    public String deleteUserForm(@RequestParam("id") long id,ModelMap model) {
+        User user = userService.getUserById(id);
+        model.addAttribute("user", user);
+        model.addAttribute("allRoles", roleService.listRoles());
+        return "delete";
+    }
+
+    @PostMapping("/delete")
     public String deleteUser(@RequestParam("id") long id) {
         userService.delete(id);
         return "redirect:/admin";

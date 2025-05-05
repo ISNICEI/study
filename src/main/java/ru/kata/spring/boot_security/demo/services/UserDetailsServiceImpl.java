@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.service;
+package ru.kata.spring.boot_security.demo.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +24,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        return user;
+        // Получаем пользователя с ролями
+        return userRepository.findUserWithRolesById(user.getId())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }
