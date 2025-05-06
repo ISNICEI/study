@@ -63,8 +63,6 @@ public class User implements UserDetails {
           inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles;
 
-
-
   @Override
   @Transactional
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -129,20 +127,6 @@ public class User implements UserDetails {
 
   public void setAge(int age) {
     this.age = age;
-  }
-
-  @Override
-  public String toString() {
-    return "User{" +
-            "id=" + id +
-            ", firstName='" + firstName + '\'' +
-            ", lastName='" + lastName + '\'' +
-            ", email='" + email + '\'' +
-            ", age=" + age +
-            ", password='" + password + '\'' +
-            ", username='" + username + '\'' +
-            ", roles=" + roles +
-            '}';
   }
 
   public Set<Role> getRoles() {
@@ -213,5 +197,19 @@ public class User implements UserDetails {
     result = 31 * result + Objects.hashCode(username);
     result = 31 * result + Objects.hashCode(roles);
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return "User{" +
+            "id=" + id +
+            ", firstName='" + firstName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", email='" + email + '\'' +
+            ", age=" + age +
+            ", password='" + password + '\'' +
+            ", username='" + username + '\'' +
+            ", roles=" + roles +
+            '}';
   }
 }

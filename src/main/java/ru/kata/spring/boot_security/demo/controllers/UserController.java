@@ -20,10 +20,9 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public String getUserProfile(@AuthenticationPrincipal User user, Model model) {
+    public String getUserProfile(Model model) {
         // Получаем пользователя из базы данных по имени пользователя
-        User dbUser = userService.findByUsername(user.getUsername());
-        model.addAttribute("user", dbUser);
+        model.addAttribute("user", userService.getCurrentUser());
         return "user"; // Возвращаем имя представления (Thymeleaf шаблон)
     }
 }
