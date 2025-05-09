@@ -64,21 +64,18 @@ public class Role implements GrantedAuthority {
         if (o == null || getClass() != o.getClass()) return false;
 
         Role role = (Role) o;
-        return id == role.id && Objects.equals(name, role.name) && Objects.equals(users, role.users);
+        return id == role.id && name.equals(role.name);
     }
 
     @Override
     public int hashCode() {
         int result = Long.hashCode(id);
-        result = 31 * result + Objects.hashCode(name);
-        result = 31 * result + Objects.hashCode(users);
+        result = 31 * result + name.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        return "Role{" +
-                "name='" + name + '\'' +
-                '}';
+        return name;
     }
 }

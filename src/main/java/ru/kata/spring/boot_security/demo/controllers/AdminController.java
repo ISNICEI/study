@@ -14,10 +14,11 @@ import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Controller
-@RequestMapping("/admin")
 public class AdminController {
     private UserService userService;
     private RoleService roleService;
@@ -28,9 +29,9 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-    @GetMapping
+    @GetMapping("/admin")
     public String showUsersList(ModelMap model) {
-        model.addAttribute("users", userService.listUsers());
+        model.addAttribute("user", userService.listUsers());
         model.addAttribute("admin", userService.getCurrentUser());
         return "adminPanel";
     }
@@ -56,7 +57,7 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @PostMapping("/delete")
+    @GetMapping("/delete")
     public String deleteUser(@RequestParam("id") long id) {
         userService.delete(id);
         return "redirect:/admin";

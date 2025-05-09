@@ -73,7 +73,7 @@
 <div class="sidebar">
     <ul class="list-unstyled">
         <div class="btn-group-vertical" role="group" aria-label="Basic example" style="width: 100%;">
-            <a href="/user/admin" class="btn btn-light" role="button">User</a>
+            <a href="/user/profile" class="btn btn-light" role="button">User</a>
             <a href="/admin/" class="btn btn-primary active" role="button"
                style="background-color: #007BFF; border-color: #007BFF;">Admin</a>
         </div>
@@ -96,6 +96,7 @@
                 <th>ID</th>
                 <th>First Name</th>
                 <th>Last Name</th>
+                <th>Age</th>
                 <th>Email</th>
                 <th>Username</th>
                 <th>Role</th>
@@ -108,6 +109,7 @@
                 <td th:text="${user.id}"/>
                 <td th:text="${user.firstName}"/>
                 <td th:text="${user.lastName}"/>
+                <td th:text="${user.age}"/>
                 <td th:text="${user.email}"/>
                 <td th:text="${user.username}"/>
                 <td th:text="${user.roles}"/>
@@ -118,6 +120,7 @@
                        th:data-id="${user.getId()}"
                        th:data-firstName="${user.getFirstName()}"
                        th:data-lastName="${user.getLastName()}"
+                       th:data-age="${user.getAge()}"
                        th:data-email="${user.getEmail()}"
                        th:data-username="${user.getUsername()}"
                        th:data-password="${user.getPassword()}"
@@ -132,6 +135,7 @@
                        th:data-id="${user.getId()}"
                        th:data-firstName="${user.getFirstName()}"
                        th:data-lastName="${user.getLastName()}"
+                       th:data-age="${user.getAge()}"
                        th:data-email="${user.getEmail()}"
                        th:data-username="${user.getUsername()}"
                        th:data-password="${user.getPassword()}"
@@ -168,6 +172,11 @@
                             <div class="form-group">
                                 <label for="lastName">Last name</label>
                                 <input type="text" id="lastName" class="form-control form-control-sm" name="lastName">
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label for="age">Age</label>
+                                <input type="text" id="age" class="form-control form-control-sm" name="age">
                             </div>
                             <br>
                             <div class="form-group">
@@ -210,8 +219,10 @@
                 document.getElementById('id').value = element.getAttribute('data-id');
                 document.getElementById('firstName').value = element.getAttribute('data-firstName')
                 document.getElementById('lastName').value = element.getAttribute('data-lastName');
+                document.getElementById('age').value = element.getAttribute('data-age')
                 document.getElementById('email').value = element.getAttribute('data-email');
                 document.getElementById('username').value = element.getAttribute('data-username');
+
             }
 
         </script>
@@ -221,9 +232,10 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="deleteUserLabel">Edit user</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
+
                     </div>
                     <form th:method="GET" th:action="@{/delete}" th:object="${user}">
                         <div class="modal-body">
@@ -242,6 +254,11 @@
                                 <label for="lastName">Last name</label>
                                 <input type="text" id="lastName1" class="form-control form-control-sm" name="lastName"
                                        readonly>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label for="age">Age</label>
+                                <input type="text" id="age1" class="form-control form-control-sm" name="age">
                             </div>
                             <br>
                             <div class="form-group">
@@ -288,6 +305,7 @@
                 document.getElementById('id1').value = element.getAttribute('data-id');
                 document.getElementById('firstName1').value = element.getAttribute('data-firstName')
                 document.getElementById('lastName1').value = element.getAttribute('data-lastName');
+                document.getElementById('age1').value = element.getAttribute('data-age');
                 document.getElementById('email1').value = element.getAttribute('data-email');
                 document.getElementById('username1').value = element.getAttribute('data-username');
             }

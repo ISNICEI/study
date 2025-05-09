@@ -26,14 +26,14 @@ import java.util.stream.Collectors;
 
 
 @Entity
-@Table(name = "users")
+@Table(name = "User")
 public class User implements UserDetails {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @Column(name = "first_name")
-  @NotBlank(message = "Недопустимое имя")
+  @NotNull(message = "Недопустимое имя")
   private String firstName;
 
   @Column(name = "last_name")
@@ -79,14 +79,19 @@ public class User implements UserDetails {
 
   public User() {}
 
-  public User(String firstName, String lastName, String email, int age, String password, String username, Set<Role> roles) {
+
+  public User(String firstName, String lastName, String email, int age, String password, String username) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.age = age;
     this.password = password;
     this.username = username;
-    this.roles = roles;
+  }
+  public String getAllUserRoles() {
+    return this.roles.stream()
+            .map(Role::getName)
+            .collect(Collectors.joining(", "));
   }
 
   public Long getId() {

@@ -35,7 +35,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public List<User> listUsers() {
-        return userRepository.findAll();
+        return userRepository.findAllWithRoles();
     }
 
     @Override
