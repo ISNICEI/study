@@ -9,6 +9,4 @@ public interface RoleService {
     List<Role> listRoles();
 
     void add(Role role);
-
-    Optional<Role> findByName(String name);
 }

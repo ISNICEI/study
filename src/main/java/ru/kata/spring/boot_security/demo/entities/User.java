@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 
 @Entity
-@Table(name = "User")
+@Table(name = "user")
 public class User implements UserDetails {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,10 +44,6 @@ public class User implements UserDetails {
   @NotBlank(message = "Недопустимаый email")
   @Email
   private String email;
-
-  @Column(name = "age")
-  @NotNull(message = "Недопустимаый возраст")
-  private int age;
 
   @NotBlank(message = "Пароль не может быть пустым")
   @Column(name = "password")
@@ -80,11 +76,11 @@ public class User implements UserDetails {
   public User() {}
 
 
-  public User(String firstName, String lastName, String email, int age, String password, String username) {
+  public User(String firstName, String lastName, String email, String password, String username) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
-    this.age = age;
+
     this.password = password;
     this.username = username;
   }
@@ -124,14 +120,6 @@ public class User implements UserDetails {
 
   public void setEmail(String email) {
     this.email = email;
-  }
-
-  public int getAge() {
-    return age;
-  }
-
-  public void setAge(int age) {
-    this.age = age;
   }
 
   public Set<Role> getRoles() {
@@ -185,7 +173,7 @@ public class User implements UserDetails {
     if (o == null || getClass() != o.getClass()) return false;
 
     User user = (User) o;
-    return age == user.age && Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName)
+    return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName)
             && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email)
             && Objects.equals(password, user.password) && Objects.equals(username, user.username)
             && Objects.equals(roles, user.roles);
@@ -197,7 +185,6 @@ public class User implements UserDetails {
     result = 31 * result + Objects.hashCode(firstName);
     result = 31 * result + Objects.hashCode(lastName);
     result = 31 * result + Objects.hashCode(email);
-    result = 31 * result + age;
     result = 31 * result + Objects.hashCode(password);
     result = 31 * result + Objects.hashCode(username);
     result = 31 * result + Objects.hashCode(roles);
@@ -211,7 +198,6 @@ public class User implements UserDetails {
             ", firstName='" + firstName + '\'' +
             ", lastName='" + lastName + '\'' +
             ", email='" + email + '\'' +
-            ", age=" + age +
             ", password='" + password + '\'' +
             ", username='" + username + '\'' +
             ", roles=" + roles +

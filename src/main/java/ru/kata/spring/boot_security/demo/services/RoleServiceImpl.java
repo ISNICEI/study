@@ -31,8 +31,5 @@ public class RoleServiceImpl implements RoleService {
         roleRepository.save(role);
     }
 
-    @Override
-    public Optional<Role> findByName(String name) {
-        return Optional.ofNullable(roleRepository.findByName(name));
-    }
+
 }

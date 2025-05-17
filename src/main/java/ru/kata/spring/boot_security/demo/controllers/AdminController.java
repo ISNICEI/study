@@ -1,13 +1,16 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.kata.spring.boot_security.demo.entities.Role;
 import ru.kata.spring.boot_security.demo.entities.User;
 import ru.kata.spring.boot_security.demo.services.RoleService;
@@ -15,10 +18,9 @@ import ru.kata.spring.boot_security.demo.services.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
-@Controller
+@RestController
+@RequestMapping("/admin")
 public class AdminController {
     private UserService userService;
     private RoleService roleService;
@@ -29,43 +31,43 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-    @GetMapping("/admin")
-    public String showUsersList(ModelMap model) {
-        model.addAttribute("user", userService.listUsers());
-        model.addAttribute("admin", userService.getCurrentUser());
-        return "adminPanel";
+    @GetMapping("/users")
+    public List<User> showUsersList() {
+        return userService.listUsers();
     }
 
-    @GetMapping("/new")
-    public String formAddUser(ModelMap model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("admin", userService.getCurrentUser());
-        model.addAttribute("allRoles", roleService.listRoles());
-        return "new";
+    @GetMapping("/users/{id}")
+    public User showUser(@PathVariable long id) {
+        return userService.getUserById(id).get();
     }
 
-    @PostMapping("/create")
-    public String addUser(@ModelAttribute("user") User user, @RequestParam("role") Set<Role> roles) {
-        userService.save(user,roles);
-        return "redirect:/admin";
+    @GetMapping("/users/roles")
+    public List<Role> showRolesList(ModelMap model) {
+        return roleService.listRoles();
     }
 
-    @PostMapping("/update")
-    public String updateUser(@RequestParam("id") long id, @ModelAttribute("user") @Valid User user,
-                             @RequestParam(value = "role", required = false) Set<Role> roles) {
-        userService.update(user,roles,id);
-        return "redirect:/admin";
+    @PostMapping("/new")
+    public ResponseEntity<HttpStatus> newUser(@Valid @RequestBody User user) {
+        userService.save(user, user.getRoles());
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("/delete")
-    public String deleteUser(@RequestParam("id") long id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable long id) {
         userService.delete(id);
-        return "redirect:/admin";
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("/user/profile")
-    public String profile(ModelMap model) {
-        model.addAttribute("user", userService.getCurrentUser());
-        return "profile";
+    @PostMapping(value = "/update")
+    public ResponseEntity<HttpStatus> update(@Valid @RequestBody User user) {
+        userService.update(user, user.getRoles(), user.getId());
+        return ResponseEntity.ok(HttpStatus.OK);
     }
+
+    @GetMapping("/authUser")
+    public ResponseEntity<User> authenticationUser() {
+        User user = userService.getCurrentUser();
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
 }
